@@ -1,0 +1,199 @@
+# ============================================
+# Personal Income and Expense Tracker
+# ============================================
+# This program allows the user to enter their
+# monthly income and an unlimited number of
+# expenses. It then calculates a financial
+# summary and shows spending by category.
+# ============================================
+
+# Ask the user for their monthly income
+income = float(input("Enter your monthly income: $"))
+
+# Create a list to store all expenses
+expenses = []
+
+# Create a dictionary to keep track of spending by category
+categories = {}
+
+# Keep asking the user for expenses until they choose to stop
+while True:
+    print("\n--- Add an Expense ---")
+
+    # Ask for the expense name
+    expense_name = input("Enter the expense name (or type 'done' to finish): ")
+
+    # Conditional statement to stop entering expenses
+    if expense_name.lower() == "done":
+        break
+
+    # Ask how much the expense cost
+    amount = float(input("Enter the expense amount: $"))
+
+    # Ask the user to choose a category
+    print("\nCategories:")
+    print("1. Food")
+    print("2. Housing")
+    print("3. Transportation")
+    print("4. Entertainment")
+    print("5. Bills")
+    print("6. Other")
+
+    category_choice = input("Choose a category (1-6): ")
+
+    # Use conditional statements to determine the category
+    if category_choice == "1":
+        category = "Food"
+    elif category_choice == "2":
+        category = "Housing"
+    elif category_choice == "3":
+        category = "Transportation"
+    elif category_choice == "4":
+        category = "Entertainment"
+    elif category_choice == "5":
+        category = "Bills"
+    else:
+        category = "Other"
+
+    # Store the expense as a dictionary inside the list
+    expenses.append({
+        "name": expense_name,
+        "amount": amount,
+        "category": category
+    })
+
+    # Add the expense to its category
+    if category in categories:
+        categories[category] += amount
+    else:
+        categories[category] = amount
+
+    print(f"{expense_name} has been added!")
+
+# ============================================
+# Calculate Financial Summary
+# ============================================
+
+# Check whether the user entered any expenses
+if len(expenses) == 0:
+    print("\nYou did not enter any expenses.")
+    total_expenses = 0
+    remaining_money = income
+
+else:
+    # Calculate the total expenses
+    total_expenses = 0
+
+    # Loop through the expense list
+    for expense in expenses:
+        total_expenses += expense["amount"]
+
+    # Calculate the remaining money
+    remaining_money = income - total_expenses
+
+    # Find the largest and smallest expenses
+    largest_expense = expenses[0]
+    smallest_expense = expenses[0]
+
+    # Loop through expenses to find largest and smallest
+    for expense in expenses:
+        if expense["amount"] > largest_expense["amount"]:
+            largest_expense = expense
+
+        if expense["amount"] < smallest_expense["amount"]:
+            smallest_expense = expense
+
+    # Calculate the average expense
+    average_expense = total_expenses / len(expenses)
+
+# ============================================
+# Display Financial Summary
+# ============================================
+
+print("\n" + "=" * 45)
+print("           FINANCIAL SUMMARY")
+print("=" * 45)
+
+print(f"Monthly Income:       ${income:,.2f}")
+print(f"Total Expenses:       ${total_expenses:,.2f}")
+print(f"Remaining Money:      ${remaining_money:,.2f}")
+
+# Only display expense statistics if expenses exist
+if len(expenses) > 0:
+    print(f"Largest Expense:      ${largest_expense['amount']:,.2f}")
+    print(f"  ({largest_expense['name']})")
+
+    print(f"Smallest Expense:     ${smallest_expense['amount']:,.2f}")
+    print(f"  ({smallest_expense['name']})")
+
+    print(f"Average Expense:      ${average_expense:,.2f}")
+
+# ============================================
+# Show Spending by Category
+# ============================================
+
+print("\n" + "=" * 45)
+print("         SPENDING BY CATEGORY")
+print("=" * 45)
+
+# Check if there are any categories
+if len(categories) == 0:
+    print("No spending categories to display.")
+
+else:
+    # Loop through each category
+    for category, amount in categories.items():
+
+        # Calculate what percentage of spending
+        # belongs to this category
+        percentage = (amount / total_expenses) * 100
+
+        print(f"{category}: ${amount:,.2f} ({percentage:.1f}%)")
+
+# ============================================
+# Bonus: Text-Based Bar Chart
+# ============================================
+
+print("\n" + "=" * 45)
+print("             SPENDING CHART")
+print("=" * 45)
+
+# Only create a chart if there are expenses
+if total_expenses > 0:
+
+    # Loop through every spending category
+    for category, amount in categories.items():
+
+        # Calculate the percentage
+        percentage = (amount / total_expenses) * 100
+
+        # Create a simple bar using # symbols
+        bar_length = int(percentage / 2)
+        bar = "#" * bar_length
+
+        print(f"{category:<16} | {bar} {percentage:.1f}%")
+
+else:
+    print("No expenses to display.")
+
+# ============================================
+# Final Financial Message
+# ============================================
+
+print("\n" + "=" * 45)
+print("             FINANCIAL STATUS")
+print("=" * 45)
+
+# Conditional statements determine the user's
+# overall financial situation
+if remaining_money > 0:
+    print("You have money remaining after your expenses.")
+
+elif remaining_money == 0:
+    print("You spent exactly your monthly income.")
+
+else:
+    print("WARNING: You spent more money than you earned.")
+
+print("\nThank you for using the Income and Expense Tracker!")
+
